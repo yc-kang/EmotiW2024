@@ -1,0 +1,11 @@
+tensorflow
+numpy
+pandas
+tqdm
+sklearn
+marlin_pytorch
+torch
+mediapipe
+cv2
+matplotlib
+keras
