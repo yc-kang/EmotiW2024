@@ -22,7 +22,20 @@ Structure:
 - notebooks/ensemble - Model ensemble from different modalities
 
 ## Results
-### 
+### Individual Modalities
+
+| Modality  | Accuracy | F1-Score
+| ------------- | ------------- | ------------- |
+| Pose  | - | - |
+| Landmark  | - | - |
+| Face | - | - |
+| Video Understanding | - | - |
+
+### Table - Final Ensemble
+| Dataset  | Accuracy
+| ------------- | -------------
+| Validation | **-** |
+| Test | **-** |
 
 ## The Team
 Yichen Kang, Yanchun Zhang, Jun Wu  
