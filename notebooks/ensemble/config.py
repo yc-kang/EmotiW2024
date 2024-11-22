@@ -9,5 +9,7 @@ LABEL_MAP = {
 SNP = 'SNP(Subject Not Present)'
 
 MARLIN = 'marlin_features_large'    # MARLIN Only
-FUSION = 'engage_gaze+hp+au_marlin' # OpenFace + MARLIN
 GAZE_HP_AU = 'engage_gaze+hp+au'    # OpenFace Only
+MEDIAPIPE = 'engage_bodypose'       # Mediapipe Only
+
+FUSION = 'engage_gaze+hp+au_marlin' # OpenFace + MARLIN
