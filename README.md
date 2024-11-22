@@ -16,7 +16,7 @@ The model is ensembled from: Pose Tracking, Facial Landmarks, Facial Features, V
 </div>
 
 ## Code Layout
-Structure:
+Structure: [here](myLib/Directory_Structure.md)
 - notebooks/augmentation - Data augmentation
 - notebooks/preprocessing - Data preprocessing pipelines
 - notebooks/ensemble - Model ensemble from different modalities
