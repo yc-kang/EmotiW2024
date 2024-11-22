@@ -131,7 +131,12 @@ def data_loader_v1(feature_type, val=True, scale=False, base_dir='EmotiW2023 Dat
     labels = pd.read_excel(f'{base_dir}/engagement_labels.xlsx', index_col=0) # Load label file
     print(labels.head())
     
-    Xy = np.load(f'{base_dir}/Xy_{feature_type}_10.npy', allow_pickle=True) # Load npy file
+    # OpenFace
+    #Xy = np.load(f'{base_dir}/Xy_{feature_type}_10.npy', allow_pickle=True) # Load npy file
+
+    # Marlin
+    Xy = np.load(f'{base_dir}/Xy_{feature_type}.npy', allow_pickle=True) # Load npy file
+    
     Xy = utils.cleanXy(Xy)
     print(type(Xy), len(Xy))
 
