@@ -1,14 +1,14 @@
 # Directory Structure
 
 /EmotiW2024  
-├── images/ # Image assets directory  
-├── notebooks/ # Jupyter notebooks for different processing stages  
-│ ├── augmentation/ # Data augmentation notebooks  
-│ ├── preprocessing/ # Data preprocessing pipeline notebooks  
-│ └── ensemble/ # Model ensemble notebooks  
-├── LICENSE # MIT license file  
-├── README.md # Project documentation  
-└── requirements.txt # Python dependencies  
+├── images/               
+├── notebooks/           
+│ ├── augmentation/     
+│ ├── preprocessing/       
+│ └── ensemble/            
+├── LICENSE              
+├── README.md              
+└── requirements.txt      
 
 The structure is organized as follows:
 
