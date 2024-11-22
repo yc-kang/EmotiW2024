@@ -27,7 +27,7 @@ Based on EngageNet Validation Set
 | Modality  | Accuracy | F1-Score
 | ------------- | ------------- | ------------- |
 | Pose  | 0.654 | 0.60 |
-| Landmark  | 0.4889 | 0.40 |
+| Landmark  | 0.4889 | 0.23 |
 | Face | 0.7087 | 0.60 |
 | Video Understanding | - | - |
 
