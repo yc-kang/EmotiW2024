@@ -24,11 +24,13 @@ Structure:
 ## Results
 ### Individual Modalities
 
+Based on EngageNet Validation Set
+
 | Modality  | Accuracy | F1-Score
 | ------------- | ------------- | ------------- |
 | Pose  | - | - |
 | Landmark  | - | - |
-| Face | - | - |
+| Face | 0.7087 | 0.60 |
 | Video Understanding | - | - |
 
 ### Table - Final Ensemble
