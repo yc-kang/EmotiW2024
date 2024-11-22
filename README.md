@@ -23,15 +23,30 @@ Structure:
 
 ## Results
 ### Individual Modalities
-
 Based on EngageNet Validation Set
-
 | Modality  | Accuracy | F1-Score
 | ------------- | ------------- | ------------- |
 | Pose  | 0.654 | 0.60 |
 | Landmark  | - | - |
 | Face | 0.7087 | 0.60 |
 | Video Understanding | - | - |
+
+### Ensembling Performance
+| Ensemble  | Accuracy | F1-Score
+| ------------- | ------------- | ------------- |
+| Transformer  | - | - |
+| Transformer-Fusion  | - | - |
+| Model x  | - | - |
+| Model y | - | - |
+| Model z | - | - |
+
+### Ablation Study
+| Ensemble  | Accuracy | F1-Score
+| ------------- | ------------- | ------------- |
+| Pose-Land-Face  | - | - |
+| Pose-Land-Vid  | - | - |
+| Pose-Face-Vid  | - | - |
+| Land-Face-Vid | - | - |
 
 ### Table - Final Ensemble
 | Dataset  | Accuracy
