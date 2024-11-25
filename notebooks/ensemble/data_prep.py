@@ -1,3 +1,5 @@
+# There are 3 dataloaders, data_loader_fusion, data_loader_v1, data_loader_triple
+
 import os
 import glob
 import utils
@@ -14,6 +16,158 @@ scaler = RobustScaler()
 n_segments = config.N_SEGMENTS
 
 # Note that base_dir='EmotiW2023 Data Small' just for testing purposes
+
+def pad_sequences(sequences):
+    # Find max length and feature dimension
+    max_length = max(len(seq) for seq in sequences)
+    feature_dim = sequences[0].shape[1]
+    
+    # Initialize array for padded sequences
+    padded_sequences = np.zeros((len(sequences), max_length, feature_dim))
+    
+    # Fill the array with actual sequences
+    for i, seq in enumerate(sequences):
+        padded_sequences[i, :len(seq), :] = seq
+        
+    return padded_sequences
+
+def data_loader_triple(feature_type, val=True, base_dir='EmotiW2023 Data Small'):
+    labels = pd.read_excel(f'{base_dir}/engagement_labels.xlsx', index_col=0)
+    print(labels.head())
+
+    Xy = np.load(f'{base_dir}/Xy_{feature_type}.npy', allow_pickle=True)
+    print(type(Xy), len(Xy))
+    
+    features_label_map = {}
+    for xy in Xy:
+        features_label_map[xy[0]] = (xy[1], xy[2], xy[3], xy[4])
+        
+    # Initialize arrays
+    train_x_1, train_x_2, train_x_3 = [], [], []
+    train_y = []
+    
+    if val:
+        val_x_1, val_x_2, val_x_3 = [], [], []
+        val_y = []
+        
+    test_x_1, test_x_2, test_x_3 = [], [], []
+    test_y = []
+
+    train_not_found_count = 0
+    val_not_found_count = 0
+    test_not_found_count = 0
+    
+    # Load split files
+    trainXy = utils.read_file(f'{base_dir}/train.txt')
+    testXy = utils.read_file(f'{base_dir}/test.txt')
+    valXy = utils.read_file(f'{base_dir}/valid.txt')
+
+    # Testing
+    print('TrainXy:', trainXy[:5])
+    print('len TrainXy:', len(trainXy))
+    print('TestXy:', testXy[:5])
+    print('len TestXy:', len(testXy))
+    print('ValXy:', valXy[:5])
+    print('len ValXy:', len(valXy))
+
+     # Training loop
+    for e in trainXy:
+        try:
+            xy = features_label_map[e]
+            if xy[3] != config.SNP:
+                train_x_1.append(xy[0])
+                train_x_2.append(xy[1])
+                train_x_3.append(xy[2])
+                train_y.append(config.LABEL_MAP[xy[3]])
+        except KeyError as k:
+            print ('not found(train): ', k)
+            train_not_found_count += 1
+            # pass
+
+    # Need to implement some sort of data scaling (But not sure if it's openface or marlin)
+    # Important!!!
+    train_x_3_padded = pad_sequences(train_x_3)
+    
+    # Reshape for scaling
+    original_shape = train_x_3_padded.shape
+    X = train_x_3_padded.reshape(-1, train_x_3_padded.shape[-1])
+    
+    # Fit and transform
+    scaler.fit(X)
+    X = scaler.transform(X)
+    
+    # Reshape back
+    train_x_3_scaled = X.reshape(original_shape)
+
+    # Validation loop
+    if val:
+        for e in valXy:
+            try:
+                xy = features_label_map[e]
+                if xy[3] != config.SNP:
+                    val_x_1.append(xy[0])
+                    val_x_2.append(xy[1])
+                    val_x_3.append(xy[2])
+                    val_y.append(config.LABEL_MAP[xy[3]])
+            except KeyError as k:
+                print('not found(val): ', k)
+                val_not_found_count += 1
+        
+        # Process validation data
+        val_x_3_padded = pad_sequences(val_x_3)
+        val_shape = val_x_3_padded.shape
+        val_x_3_scaled = scaler.transform(val_x_3_padded.reshape(-1, val_x_3_padded.shape[-1])).reshape(val_shape)
+
+    
+    # Validation loop
+    for e in valXy:
+        try:
+            xy = features_label_map[e]
+            if xy[3] != config.SNP:
+                x = xy[2]
+                x = scaler.transform(xy[2])
+                
+                if val:
+                    val_x_3.append(x)
+                    val_x_2.append(xy[1])
+                    val_x_1.append(xy[0])
+                    val_y.append(config.LABEL_MAP[xy[3]])
+                else:
+                    train_x_1.append(xy[0])
+                    train_x_2.append(xy[1])
+                    train_x_3.append(x)
+                    train_y.append(config.LABEL_MAP[xy[3]])
+        except KeyError as k:
+            print ('not found(val): ', k)
+            val_not_found_count += 1
+    
+    # Test loop
+    for e in testXy:
+        try:
+            xy = features_label_map[e]
+            if xy[3] != config.SNP:
+                x = xy[2]
+                x = scaler.transform(xy[2])
+                
+                test_x_1.append(xy[0])
+                test_x_2.append(xy[1])
+                test_x_3.append(x)
+                test_y.append(config.LABEL_MAP[xy[3]])
+        except KeyError as k:
+            print ('not found(test): ', k)
+            test_not_found_count += 1
+        
+    if val:
+        return (
+            ((np.array(train_x_1), np.array(train_x_2), np.array(train_x_3)), np.array(train_y)),
+            ((np.array(val_x_1), np.array(val_x_2), np.array(val_x_3)), np.array(val_y)),
+            ((np.array(test_x_1), np.array(test_x_2), np.array(test_x_3)), np.array(test_y))
+        )
+    else:
+        return (
+            ((np.array(train_x_1), np.array(train_x_2), np.array(train_x_3)), np.array(train_y)),
+            ((np.array(test_x_1), np.array(test_x_2), np.array(test_x_3)), np.array(test_y))
+        )
 
 def data_loader_fusion(feature_type, val=True, base_dir='EmotiW2023 Data Small'):
     labels = pd.read_excel(f'{base_dir}/engagement_labels.xlsx', index_col=0) # Load label file
@@ -240,7 +394,7 @@ def data_loader_v1(feature_type, val=True, scale=False, base_dir='EmotiW2023 Dat
 if __name__ == '__main__':
 
     print ("testing data prep")
-    feature_type = config.GAZE_HP_AU  # selections: GAZE_HP_AU, FUSION
+    feature_type = config.GAZE_HP_AU
     train, val, test = data_loader_v1(feature_type, val=True)
     train_x, train_y = train
     test_x, test_y = test
