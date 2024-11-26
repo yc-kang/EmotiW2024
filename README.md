@@ -23,13 +23,13 @@ Structure: [here](Directory_Structure.md)
 
 ## Results
 ### Individual Modalities
-Based on EngageNet Validation Set
+Based on EngageNet Test Set
 | Modality  | Accuracy | F1-Score
 | ------------- | ------------- | ------------- |
-| Pose  | 0.654 | 0.60 |
-| Landmark  | 0.4889 | 0.23 |
-| Face | 0.7087 | 0.60 |
-| Video Understanding | - | - |
+| Pose | 0.7383 | 0.7 |
+| Landmark | 0.6519 | 0.61 |
+| Face | 0.6858 | 0.67 |
+| Video Understanding | 0.6138 | 0.58 |
 
 ### Ensembling Performance
 | Ensemble  | Accuracy | F1-Score
