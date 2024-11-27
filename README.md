@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/28e29955-d6ea-412a-931a-be2aa2f67636)# Multimodal Engagement Classification - EmotiW2024
+# Multimodal Engagement Classification - EmotiW2024
 
 ## Introduction
 ACM [EmotiW2024](https://sites.google.com/view/emotiw2024/home) challenge, we focused the subchallenge: Engagement classification on videos.
