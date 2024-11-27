@@ -1,4 +1,5 @@
-# There are 3 dataloaders, data_loader_fusion, data_loader_v1, data_loader_triple
+# There are 4 dataloaders, data_loader_fusion, data_loader_v1, data_loader_triple, data_loader_quad
+# Note that data_loader_triple, data_loader_quad are in beta phase
 
 import os
 import glob
@@ -17,19 +18,132 @@ n_segments = config.N_SEGMENTS
 
 # Note that base_dir='EmotiW2023 Data Small' just for testing purposes
 
-def pad_sequences(sequences):
-    # Find max length and feature dimension
-    max_length = max(len(seq) for seq in sequences)
-    feature_dim = sequences[0].shape[1]
+def data_loader_quad(feature_type, val=True, base_dir='EmotiW2023 Data Small'):
+    labels = pd.read_excel(f'{base_dir}/engagement_labels.xlsx', index_col=0)
+    print(labels.head())
+
+    Xy = np.load(f'{base_dir}/Xy_{feature_type}.npy', allow_pickle=True)
+    print(type(Xy), len(Xy))
     
-    # Initialize array for padded sequences
-    padded_sequences = np.zeros((len(sequences), max_length, feature_dim))
-    
-    # Fill the array with actual sequences
-    for i, seq in enumerate(sequences):
-        padded_sequences[i, :len(seq), :] = seq
+    features_label_map = {}
+    for xy in Xy:
+        features_label_map[xy[0]] = (xy[1], xy[2], xy[3], xy[4], xy[5])  # Added xy[5] for fourth feature
         
-    return padded_sequences
+    # Initialize arrays with four feature streams
+    train_x_1, train_x_2, train_x_3, train_x_4 = [], [], [], []
+    train_y = []
+    
+    if val:
+        val_x_1, val_x_2, val_x_3, val_x_4 = [], [], [], []
+        val_y = []
+        
+    test_x_1, test_x_2, test_x_3, test_x_4 = [], [], [], []
+    test_y = []
+
+    train_not_found_count = 0
+    val_not_found_count = 0
+    test_not_found_count = 0
+    
+    # Load split files
+    trainXy = utils.read_file(f'{base_dir}/train.txt')
+    testXy = utils.read_file(f'{base_dir}/test.txt')
+    valXy = utils.read_file(f'{base_dir}/valid.txt')
+
+    # Print debug info
+    print('TrainXy:', trainXy[:5])
+    print('len TrainXy:', len(trainXy))
+    print('TestXy:', testXy[:5])
+    print('len TestXy:', len(testXy))
+    print('ValXy:', valXy[:5])
+    print('len ValXy:', len(valXy))
+
+    # Training loop
+    for e in trainXy:
+        try:
+            xy = features_label_map[e]
+            if xy[4] != config.SNP:  # Assuming label is now at index 4
+                train_x_1.append(xy[0])
+                train_x_2.append(xy[1])
+                train_x_3.append(xy[2])
+                train_x_4.append(xy[3])
+                train_y.append(config.LABEL_MAP[xy[4]])
+        except KeyError as k:
+            print('not found(train): ', k)
+            train_not_found_count += 1
+
+    # Apply scaling to the third and fourth features (assuming they need scaling)
+    train_x_3 = np.array(train_x_3)
+    train_x_4 = np.array(train_x_4)
+    
+    # Reshape for scaling
+    original_shape_3 = train_x_3.shape
+    original_shape_4 = train_x_4.shape
+    
+    X3 = train_x_3.reshape(-1, train_x_3.shape[-1])
+    X4 = train_x_4.reshape(-1, train_x_4.shape[-1])
+    
+    # Fit and transform
+    scaler_3 = RobustScaler()
+    scaler_4 = RobustScaler()
+    
+    X3 = scaler_3.fit_transform(X3)
+    X4 = scaler_4.fit_transform(X4)
+    
+    # Reshape back
+    train_x_3 = X3.reshape(original_shape_3)
+    train_x_4 = X4.reshape(original_shape_4)
+
+    # Validation loop
+    if val:
+        for e in valXy:
+            try:
+                xy = features_label_map[e]
+                if xy[4] != config.SNP:
+                    x3 = scaler_3.transform(xy[2].reshape(-1, xy[2].shape[-1])).reshape(xy[2].shape)
+                    x4 = scaler_4.transform(xy[3].reshape(-1, xy[3].shape[-1])).reshape(xy[3].shape)
+                    
+                    val_x_1.append(xy[0])
+                    val_x_2.append(xy[1])
+                    val_x_3.append(x3)
+                    val_x_4.append(x4)
+                    val_y.append(config.LABEL_MAP[xy[4]])
+            except KeyError as k:
+                print('not found(val): ', k)
+                val_not_found_count += 1
+
+    # Test loop
+    for e in testXy:
+        try:
+            xy = features_label_map[e]
+            if xy[4] != config.SNP:
+                x3 = scaler_3.transform(xy[2].reshape(-1, xy[2].shape[-1])).reshape(xy[2].shape)
+                x4 = scaler_4.transform(xy[3].reshape(-1, xy[3].shape[-1])).reshape(xy[3].shape)
+                
+                test_x_1.append(xy[0])
+                test_x_2.append(xy[1])
+                test_x_3.append(x3)
+                test_x_4.append(x4)
+                test_y.append(config.LABEL_MAP[xy[4]])
+        except KeyError as k:
+            print('not found(test): ', k)
+            test_not_found_count += 1
+
+    # Print error counts
+    print(f"Total not found in train: {train_not_found_count}")
+    print(f"Total not found in validation: {val_not_found_count}")
+    print(f"Total not found in test: {test_not_found_count}")
+
+    if val:
+        return (
+            ((np.array(train_x_1), np.array(train_x_2), np.array(train_x_3), np.array(train_x_4)), np.array(train_y)),
+            ((np.array(val_x_1), np.array(val_x_2), np.array(val_x_3), np.array(val_x_4)), np.array(val_y)),
+            ((np.array(test_x_1), np.array(test_x_2), np.array(test_x_3), np.array(test_x_4)), np.array(test_y))
+        )
+    else:
+        return (
+            ((np.array(train_x_1), np.array(train_x_2), np.array(train_x_3), np.array(train_x_4)), np.array(train_y)),
+            ((np.array(test_x_1), np.array(test_x_2), np.array(test_x_3), np.array(test_x_4)), np.array(test_y))
+        )
 
 def data_loader_triple(feature_type, val=True, base_dir='EmotiW2023 Data Small'):
     labels = pd.read_excel(f'{base_dir}/engagement_labels.xlsx', index_col=0)
@@ -86,7 +200,7 @@ def data_loader_triple(feature_type, val=True, base_dir='EmotiW2023 Data Small')
 
     # Need to implement some sort of data scaling (But not sure if it's openface or marlin)
     # Important!!!
-    train_x_3_padded = pad_sequences(train_x_3)
+    
     
     # Reshape for scaling
     original_shape = train_x_3_padded.shape

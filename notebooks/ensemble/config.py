@@ -19,5 +19,11 @@ FUSION = 'engage_gaze+hp+au_marlin'     # OpenFace + MARLIN
 FUSION_2 = 'engage_gaze+hp+au_bodypose' # OpenFace + Mediapipe
 FUSION_3 = 'engage_bodypose_marlin'     # MARLIN + Mediapipe
 
-# Not Used Yet, Triple Combine
+# Triple Combine
 FUSION_TRI = 'engage_gaze+hp+au_marlin_bodypose' # OpenFace + Mediapipe + MARLIN
+FUSION_TRI_2 = 'engage_gaze+hp+au_bodypose_videollava' # OpenFace + Mediapipe + Videollava
+FUSION_TRI_3 = 'engage_gaze+hp+au_marlin_videollava' # OpenFace + MARLIN + Videollava
+FUSION_TRI_4 = 'engage_bodypose_marlin_videollava' # Mediapipe + MARLIN + Videollava
+
+# Quad Combine
+FUSION_QUAD = 'engage_gaze+hp+au_marlin_bodypose_videollava' # OpenFace + Mediapipe + MARLIN + Videollava
