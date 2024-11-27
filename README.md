@@ -1,4 +1,4 @@
-# Multimodal Engagement Classification - EmotiW2024
+![image](https://github.com/user-attachments/assets/28e29955-d6ea-412a-931a-be2aa2f67636)# Multimodal Engagement Classification - EmotiW2024
 
 ## Introduction
 ACM [EmotiW2024](https://sites.google.com/view/emotiw2024/home) challenge, we focused the subchallenge: Engagement classification on videos.
@@ -32,27 +32,26 @@ Based on EngageNet Test Set
 | Video Understanding | 0.6138 | 0.58 |
 
 ### Ensembling Performance
-| Ensemble  | Accuracy | F1-Score
-| ------------- | ------------- | ------------- |
-| Transformer  | - | - |
-| Transformer-Fusion  | - | - |
-| Model x  | - | - |
-| Model y | - | - |
-| Model z | - | - |
+| Ensemble  | Accuracy
+| ------------- | ------------- |
+| Late-Fusion (Hard) | 0.676 |
+| Late-Fusion (Soft) | 0.718 |
+| Late-Fusion (Weighted) | 0.694 |
+| Early-Fusion (Transformer Fusion) | 0.744 |
 
 ### Ablation Study
-| Ensemble  | Accuracy | F1-Score
-| ------------- | ------------- | ------------- |
-| Pose-Land-Face  | - | - |
-| Pose-Land-Vid  | - | - |
-| Pose-Face-Vid  | - | - |
-| Land-Face-Vid | - | - |
+| Ensemble  | Accuracy
+| ------------- | ------------- |
+| Pose-Land-Face  | 0.743 |
+| Pose-Land-Vid  | 0.740 |
+| Pose-Face-Vid  | 0.747 |
+| Land-Face-Vid | 0.695 |
 
 ### Table - Final Ensemble
 | Dataset  | Accuracy
 | ------------- | -------------
-| Validation | **-** |
-| Test | **-** |
+| Validation | 0.713 |
+| Test | 0.747 |
 
 ## The Team
 Yichen Kang, Yanchun Zhang, Jun Wu  
