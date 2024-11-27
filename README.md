@@ -26,10 +26,10 @@ Structure: [here](Directory_Structure.md)
 Based on EngageNet Test Set
 | Modality  | Accuracy | F1-Score
 | ------------- | ------------- | ------------- |
-| Pose | 0.7383 | 0.7 |
-| Landmark | 0.6519 | 0.61 |
-| Face | 0.6858 | 0.67 |
-| Video Understanding | 0.6138 | 0.58 |
+| Pose | 0.698 | 0.69 |
+| Landmark | 0.614 | 0.58 |
+| Face | 0.689 | 0.67 |
+| Video Understanding | 0.652 | 0.61 |
 
 ### Ensembling Performance
 | Ensemble  | Accuracy
@@ -39,7 +39,7 @@ Based on EngageNet Test Set
 | Late-Fusion (Weighted) | 0.694 |
 | Early-Fusion (Transformer Fusion) | 0.744 |
 
-### Ablation Study
+### Ablation Results
 | Ensemble  | Accuracy
 | ------------- | ------------- |
 | Pose-Land-Face  | 0.743 |
