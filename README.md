@@ -1,16 +1,19 @@
 # Multimodal Engagement Classification - EmotiW2024
 
 ## Introduction
-ACM [EmotiW2024](https://sites.google.com/view/emotiw2024/home) challenge, we focused the subchallenge: Engagement classification on videos.
+ACM [EmotiW2024](https://sites.google.com/view/emotiw2024/home) challenge, we focused the subchallenge: Engagement classification on videos.  
+
+Checkout our PowerPoint [here](Presentation.pdf)
 
 ## Dataset and baselines
-We worked with [EngageNet](https://github.com/engagenet/engagenet_baselines), with a pre-ensemble baseline.
+We worked with [EngageNet](https://github.com/engagenet/engagenet_baselines), with a pre-ensemble baseline.  
+By data augmentation (flip & color-filter), we ensured that each classes have a minimum of 3500 videos.
 
-<div style="vertical-align:middle"><img src="images/figure1.png" alt="Dataset" width="550px" text-align="center">
+<div style="vertical-align:middle"><img src="images/figure1.png" alt="Dataset" width="450px" text-align="center">
 </div>
 
 ## Architecture
-The model is ensembled from: Pose Tracking, Facial Landmarks, Facial Features, Video Understanding
+The model is ensembled from: [Pose Tracking](https://github.com/TadasBaltrusaitis/OpenFace), [Facial Landmarks](https://github.com/google-ai-edge/mediapipe), [Facial Features](https://github.com/ControlNet/MARLIN), [Video Understanding](https://github.com/PKU-YuanGroup/Video-LLaVA)
 
 <div style="text-align:center"><img src="images/figure2.png" alt="Model Architecture" width="550px" align="center">
 </div>
@@ -23,7 +26,8 @@ Structure:
 
 ## Results
 ### Individual Modalities
-Based on EngageNet Test Set
+Based on EngageNet Test dataset
+
 | Modality  | Accuracy | F1-Score
 | ------------- | ------------- | ------------- |
 | Pose | 0.698 | 0.69 |
