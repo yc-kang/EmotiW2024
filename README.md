@@ -13,9 +13,19 @@ By data augmentation (flip & color-filter), we ensured that each classes have a 
 </div>
 
 ## Architecture
-The model is ensembled from: [Pose Tracking](https://github.com/TadasBaltrusaitis/OpenFace), [Facial Landmarks](https://github.com/google-ai-edge/mediapipe), [Facial Features](https://github.com/ControlNet/MARLIN), [Video Understanding](https://github.com/PKU-YuanGroup/Video-LLaVA)
+The model is ensembled with 4 pipelines: [Pose Tracking](https://github.com/TadasBaltrusaitis/OpenFace), [Facial Landmarks](https://github.com/google-ai-edge/mediapipe), [Facial Features](https://github.com/ControlNet/MARLIN), [Video Understanding](https://github.com/PKU-YuanGroup/Video-LLaVA)
 
 <div style="text-align:center"><img src="images/figure2.png" alt="Model Architecture" width="550px" align="center">
+</div>
+<br />
+  
+For Pose Tracking, Facial Landmarks and Facial Features pipelines, its preprocessing is as follows:
+<div style="text-align:center"><img src="images/figure3.png" alt="Model Architecture" width="500px" align="center">
+</div>
+<br />
+  
+For Video Understanding pipeline, it was built via [Video-LLaVa LLM](https://github.com/PKU-YuanGroup/Video-LLaVA) and [bert-base-cased Embedding](https://huggingface.co/google-bert/bert-base-cased):
+<div style="text-align:center"><img src="images/figure4.png" alt="Model Architecture" width="500px" align="center">
 </div>
 
 ## Code Layout
