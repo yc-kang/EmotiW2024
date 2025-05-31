@@ -3,7 +3,7 @@
 ## Introduction
 ACM [EmotiW2024](https://sites.google.com/view/emotiw2024/home) challenge, we focused the subchallenge: Engagement classification on videos.  
 
-Checkout our PowerPoint [here](Presentation.pdf)
+Checkout our PowerPoint [here](Presentation.pdf) and Report [here](Final%20Report.pdf)
 
 ## Dataset and baselines
 We worked with [EngageNet](https://github.com/engagenet/engagenet_baselines), with a pre-ensemble baseline.  
